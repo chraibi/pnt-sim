@@ -1,0 +1,160 @@
+{
+  "project_version": "2.0",
+  "config": {
+    "simulation_settings": {
+      "simulationParams": {
+        "max_simulation_time": 300,
+        "dt": null,
+        "model_type": "WarpDriverModel",
+        "strength_neighbor_repulsion": 2.6,
+        "range_neighbor_repulsion": 0.1,
+        "gcfm_strength_neighbor_repulsion": 0.3,
+        "gcfm_strength_geometry_repulsion": 0.2,
+        "gcfm_max_neighbor_interaction_distance": 2,
+        "gcfm_max_geometry_interaction_distance": 2,
+        "gcfm_max_neighbor_repulsion_force": 9,
+        "gcfm_max_geometry_repulsion_force": 3,
+        "mass": 80,
+        "tau": 0.5,
+        "a_v": 1,
+        "a_min": 0.2,
+        "b_min": 0.2,
+        "b_max": 0.4,
+        "relaxation_time": 0.5,
+        "agent_strength": 2000,
+        "agent_range": 0.08,
+        "sfm_obstacle_scale": 2000,
+        "sfm_body_force": 120000,
+        "sfm_friction": 240000,
+        "T": 1,
+        "s0": 0.5
+      },
+      "numberOfSimulations": 1,
+      "baseSeed": 420
+    },
+    "ui_state": {
+      "useShortestPaths": false,
+      "boundaries": [
+        {
+          "mode": "manual"
+        }
+      ]
+    }
+  },
+  "exits": {},
+  "distributions": {},
+  "checkpoints": {},
+  "zones": {},
+  "journeys": [],
+  "transitions": [],
+  "obstacles": {
+    "jps-obstacles_0": {
+      "height": 3
+    },
+    "jps-obstacles_1": {
+      "height": 3
+    },
+    "jps-obstacles_2": {
+      "height": 3
+    },
+    "jps-obstacles_3": {
+      "height": 3
+    },
+    "jps-obstacles_4": {
+      "height": 3
+    },
+    "jps-obstacles_5": {
+      "height": 3
+    },
+    "jps-obstacles_6": {
+      "height": 3
+    },
+    "jps-obstacles_7": {
+      "height": 3
+    },
+    "jps-obstacles_8": {
+      "height": 3
+    },
+    "jps-obstacles_9": {
+      "height": 3
+    },
+    "jps-obstacles_10": {
+      "height": 3
+    },
+    "jps-obstacles_11": {
+      "height": 3
+    },
+    "jps-obstacles_12": {
+      "height": 3
+    },
+    "jps-obstacles_13": {
+      "height": 3
+    },
+    "jps-obstacles_14": {
+      "height": 3
+    },
+    "jps-obstacles_15": {
+      "height": 3
+    },
+    "jps-obstacles_16": {
+      "height": 3
+    },
+    "jps-obstacles_17": {
+      "height": 3
+    },
+    "jps-obstacles_18": {
+      "height": 3
+    },
+    "jps-obstacles_19": {
+      "height": 3
+    },
+    "jps-obstacles_20": {
+      "height": 3
+    },
+    "jps-obstacles_21": {
+      "height": 3
+    },
+    "jps-obstacles_22": {
+      "height": 3
+    },
+    "jps-obstacles_23": {
+      "height": 3
+    },
+    "jps-obstacles_24": {
+      "height": 3
+    },
+    "jps-obstacles_25": {
+      "height": 3
+    },
+    "jps-obstacles_26": {
+      "height": 3
+    },
+    "jps-obstacles_27": {
+      "height": 3
+    },
+    "jps-obstacles_28": {
+      "height": 3
+    },
+    "jps-obstacles_29": {
+      "height": 3
+    },
+    "jps-obstacles_30": {
+      "height": 3
+    },
+    "jps-obstacles_31": {
+      "height": 3
+    },
+    "jps-obstacles_32": {
+      "height": 3
+    },
+    "jps-obstacles_33": {
+      "height": 3
+    },
+    "jps-obstacles_34": {
+      "height": 3
+    },
+    "jps-obstacles_35": {
+      "height": 3
+    }
+  }
+}

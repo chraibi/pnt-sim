@@ -1,0 +1,345 @@
+{
+  "project_version": "2.0",
+  "config": {
+    "simulation_settings": {
+      "simulationParams": {
+        "max_simulation_time": 300,
+        "dt": null,
+        "model_type": "WarpDriverModel",
+        "strength_neighbor_repulsion": 2.6,
+        "range_neighbor_repulsion": 0.1,
+        "gcfm_strength_neighbor_repulsion": 0.3,
+        "gcfm_strength_geometry_repulsion": 0.2,
+        "gcfm_max_neighbor_interaction_distance": 2,
+        "gcfm_max_geometry_interaction_distance": 2,
+        "gcfm_max_neighbor_repulsion_force": 9,
+        "gcfm_max_geometry_repulsion_force": 3,
+        "mass": 80,
+        "tau": 0.5,
+        "a_v": 1,
+        "a_min": 0.2,
+        "b_min": 0.2,
+        "b_max": 0.4,
+        "relaxation_time": 0.5,
+        "agent_strength": 2000,
+        "agent_range": 0.08,
+        "sfm_obstacle_scale": 2000,
+        "sfm_body_force": 120000,
+        "sfm_friction": 240000,
+        "T": 1,
+        "s0": 0.5
+      },
+      "numberOfSimulations": 1,
+      "baseSeed": 420
+    },
+    "ui_state": {
+      "useShortestPaths": false,
+      "boundaries": [
+        {
+          "mode": "manual"
+        }
+      ]
+    }
+  },
+  "exits": {
+    "jps-exits_0": {
+      "type": "polygon",
+      "coordinates": [
+        [
+          20.545583549133845,
+          2.8795016603563597
+        ],
+        [
+          17.552891398354365,
+          2.6702322391239903
+        ],
+        [
+          17.413378450866112,
+          4.665360339643639
+        ],
+        [
+          20.406070601645595,
+          4.87462976087601
+        ],
+        [
+          20.545583549133845,
+          2.8795016603563597
+        ]
+      ],
+      "enable_throughput_throttling": false,
+      "max_throughput": 0
+    },
+    "jps-exits_1": {
+      "type": "polygon",
+      "coordinates": [
+        [
+          22.060928789885267,
+          -11.293030083970262
+        ],
+        [
+          19.07234469561002,
+          -11.554497312213229
+        ],
+        [
+          18.8980332101147,
+          -9.562107916029737
+        ],
+        [
+          21.88661730438995,
+          -9.30064068778677
+        ],
+        [
+          22.060928789885267,
+          -11.293030083970262
+        ]
+      ],
+      "enable_throughput_throttling": false,
+      "max_throughput": 0
+    }
+  },
+  "distributions": {
+    "jps-distributions_0": {
+      "type": "polygon",
+      "coordinates": [
+        [
+          -21.675951647835145,
+          13.965697880105783
+        ],
+        [
+          -10.925680176537693,
+          14.0655456027494
+        ],
+        [
+          -10.892397602323154,
+          8.141247392560732
+        ],
+        [
+          -21.842364518907853,
+          8.67376857999341
+        ],
+        [
+          -21.675951647835145,
+          13.965697880105783
+        ]
+      ],
+      "parameters": {
+        "number": 3,
+        "radius": 0.2,
+        "v0": 1.3,
+        "distribution_mode": "by_number",
+        "percentage": null,
+        "use_flow_spawning": false,
+        "flow_start_time": 0,
+        "flow_end_time": 10,
+        "use_premovement": false,
+        "premovement_distribution": "gamma",
+        "premovement_param_a": null,
+        "premovement_param_b": null,
+        "premovement_seed": null,
+        "radius_distribution": "constant",
+        "v0_distribution": "constant"
+      }
+    },
+    "jps-distributions_1": {
+      "type": "polygon",
+      "coordinates": [
+        [
+          -19.220519000000017,
+          -7.227569
+        ],
+        [
+          -19.220519000000017,
+          1.1724310000000002
+        ],
+        [
+          -15.920519000000017,
+          1.1724310000000002
+        ],
+        [
+          -15.820519000000015,
+          -7.227569
+        ],
+        [
+          -19.220519000000017,
+          -7.227569
+        ]
+      ],
+      "parameters": {
+        "number": 10,
+        "radius": 0.2,
+        "v0": 1.3,
+        "distribution_mode": "by_number",
+        "percentage": null,
+        "use_flow_spawning": false,
+        "flow_start_time": 0,
+        "flow_end_time": 10,
+        "use_premovement": false,
+        "premovement_distribution": "gamma",
+        "premovement_param_a": null,
+        "premovement_param_b": null,
+        "premovement_seed": null,
+        "radius_distribution": "constant",
+        "v0_distribution": "constant"
+      }
+    },
+    "jps-distributions_2": {
+      "type": "polygon",
+      "coordinates": [
+        [
+          -20.120519000000016,
+          -11.727568999999999
+        ],
+        [
+          -20.120519000000016,
+          -8.127569
+        ],
+        [
+          -14.995266243792855,
+          -8.18487460605779
+        ],
+        [
+          -14.920519000000017,
+          -11.727568999999999
+        ],
+        [
+          -20.120519000000016,
+          -11.727568999999999
+        ]
+      ],
+      "parameters": {
+        "number": 4,
+        "radius": 0.2,
+        "v0": 1.2,
+        "distribution_mode": "by_number",
+        "percentage": null,
+        "use_flow_spawning": false,
+        "flow_start_time": 0,
+        "flow_end_time": 10,
+        "use_premovement": false,
+        "premovement_distribution": "gamma",
+        "premovement_param_a": null,
+        "premovement_param_b": null,
+        "premovement_seed": null,
+        "radius_distribution": "constant",
+        "v0_distribution": "constant"
+      }
+    },
+    "jps-distributions_3": {
+      "type": "polygon",
+      "coordinates": [
+        [
+          17.479480999999986,
+          -5.427569
+        ],
+        [
+          17.479480999999986,
+          0.5724310000000002
+        ],
+        [
+          20.479480999999986,
+          0.5724310000000002
+        ],
+        [
+          20.379480999999984,
+          -5.427569
+        ],
+        [
+          17.479480999999986,
+          -5.427569
+        ]
+      ],
+      "parameters": {
+        "number": 20,
+        "radius": 0.2,
+        "v0": 1.2,
+        "distribution_mode": "by_number",
+        "percentage": null,
+        "use_flow_spawning": false,
+        "flow_start_time": 0,
+        "flow_end_time": 10,
+        "use_premovement": false,
+        "premovement_distribution": "gamma",
+        "premovement_param_a": null,
+        "premovement_param_b": null,
+        "premovement_seed": null,
+        "radius_distribution": "constant",
+        "v0_distribution": "constant"
+      }
+    }
+  },
+  "checkpoints": {},
+  "zones": {},
+  "journeys": [
+    {
+      "id": "journey_0",
+      "stages": [
+        "jps-distributions_2",
+        "jps-exits_0"
+      ],
+      "transitions": [
+        {
+          "from": "jps-distributions_2",
+          "to": "jps-exits_0",
+          "journey_id": "journey_0"
+        }
+      ]
+    }
+  ],
+  "transitions": [
+    {
+      "from": "jps-distributions_2",
+      "to": "jps-exits_0",
+      "journey_id": "journey_0"
+    }
+  ],
+  "obstacles": {
+    "jps-obstacles_0": {
+      "height": 3
+    },
+    "jps-obstacles_1": {
+      "height": 3
+    },
+    "jps-obstacles_2": {
+      "height": 3
+    },
+    "jps-obstacles_3": {
+      "height": 3
+    },
+    "jps-obstacles_4": {
+      "height": 3
+    },
+    "jps-obstacles_5": {
+      "height": 3
+    },
+    "jps-obstacles_6": {
+      "height": 3
+    },
+    "jps-obstacles_7": {
+      "height": 3
+    },
+    "jps-obstacles_8": {
+      "height": 3
+    },
+    "jps-obstacles_9": {
+      "height": 3
+    },
+    "jps-obstacles_10": {
+      "height": 3
+    },
+    "jps-obstacles_11": {
+      "height": 3
+    },
+    "jps-obstacles_12": {
+      "height": 3
+    },
+    "jps-obstacles_13": {
+      "height": 3
+    },
+    "jps-obstacles_14": {
+      "height": 3
+    },
+    "jps-obstacles_15": {
+      "height": 3
+    }
+  }
+}
