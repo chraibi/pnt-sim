@@ -5,6 +5,11 @@ Web-Based JuPedSim scenario (`config.json` + `geometry.wkt`), runs the EVA
 agent model (Turner & Penn 2002), writes a JuPedSim-format sqlite trajectory
 the web app can visualise without changes.
 
+![demo](assets/demo.gif)
+
+*40 agents wandering an art-gallery layout. No goals, no planning — each
+agent samples a visible cell within its FOV cone, walks toward it, repeats.*
+
 ## Algorithm
 
 Per Turner & Penn (2002), default parameters:
