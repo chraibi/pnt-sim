@@ -64,6 +64,13 @@ def _build_parser() -> argparse.ArgumentParser:
         default=None,
         help="visibility cache file (default: <out>.visibility.pkl)",
     )
+    p.add_argument(
+        "--workers",
+        type=int,
+        default=None,
+        help="visibility precompute workers (default: auto — all CPUs for "
+        "large grids, serial below ~500 cells). 1 forces serial.",
+    )
     return p
 
 
@@ -93,6 +100,7 @@ def main(argv: list[str] | None = None) -> int:
         args.grid,
         cache_path,
         min_wall_distance=args.clearance,
+        workers=args.workers,
     )
     print(
         f"visibility grid: cells={len(grid.cells)}, "

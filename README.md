@@ -77,6 +77,7 @@ Figure 8.
 | `--fps`               | `10.0`           | Frame rate stamped into the output metadata (does not affect the simulation, only the playback timeline).                                            |
 | `--seed`              | `None`           | RNG seed. With a seed, the run is reproducible; without one, NumPy seeds from system entropy.                                                        |
 | `--cache`             | `<out>.visibility.pkl` | Where to read/write the visibility precompute. Cache is keyed on geometry-hash + grid + clearance.                                                   |
+| `--workers`           | `auto`           | Number of processes for the visibility precompute. `auto` = all CPUs above ~500 cells, serial below. `1` forces serial. Doesn't affect the simulation step (already <1 ms). |
 
 ## Install
 
