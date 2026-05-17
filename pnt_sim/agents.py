@@ -29,7 +29,8 @@ from typing import Iterator
 
 import numpy as np
 from scipy.spatial import cKDTree
-from shapely.geometry import Polygon
+from shapely import STRtree
+from shapely.geometry import LineString, Polygon
 
 from .visibility import VisibilityGrid
 
@@ -68,6 +69,8 @@ class AgentSimulation:
         self._step_length = params.step_length or grid.grid_spacing
         self._half_fov = math.radians(params.fov_deg) / 2.0
         self._kdtree = cKDTree(grid.cells)
+        self._walls = grid.walls
+        self._wall_tree = STRtree(grid.walls) if grid.walls else None
         self._agents: list[_Agent] = []
         self._next_id = 1
 
@@ -126,24 +129,66 @@ class AgentSimulation:
         return out
 
     def _advance_agent(self, agent: _Agent) -> None:
-        # Re-decide first if it's time. The first frame for a new agent has
-        # `steps_until_decision == 0`, so the agent always picks a target
-        # before its first move — never spends a frame walking nowhere.
+        """One frame of the T&P Figure 8 decision loop.
+
+        Order (continuous-space port of Figure 8):
+          1. If n steps have been taken → reselect destination from FOV cone.
+          2. Try a step toward the destination (along heading).
+          3. If blocked → try a side step (±90° from heading).
+          4. If both blocked → reselect destination omni-directionally
+             (no FOV cone, per the "back to top" arrow in Figure 8) and
+             try once more. If still blocked, the agent stays this frame.
+        """
         if agent.steps_until_decision <= 0:
-            self._redecide(agent)
+            self._redecide(agent, omni=False)
 
-        # Walk one step along the current heading.
-        agent.x += self._step_length * math.cos(agent.heading)
-        agent.y += self._step_length * math.sin(agent.heading)
-        agent.steps_until_decision -= 1
+        if not self._try_step_then_side(agent):
+            # Stuck: per T&P, reselect from the top (omni) and try again.
+            self._redecide(agent, omni=True)
+            self._try_step_then_side(agent)
 
-        # If we've reached (or passed) the target cell, re-decide on the
-        # next step so the agent doesn't keep walking past it.
+        # Arrival shortcut: forces a re-decide on the next frame so the
+        # agent doesn't walk past its target. T&P's grid loop reaches the
+        # same outcome via step-not-possible → side-step → reselect; this
+        # is the continuous-space equivalent.
         target_xy = self._grid.cells[agent.target_idx]
         if math.hypot(agent.x - target_xy[0], agent.y - target_xy[1]) < self._step_length:
             agent.steps_until_decision = 0
 
-    def _redecide(self, agent: _Agent) -> None:
+    def _try_step_then_side(self, agent: _Agent) -> bool:
+        """T&P Figure 8: try step toward destination, else side step."""
+        if self._take_step(agent, agent.heading):
+            return True
+        # Side step: ±90° from heading, random sign chosen first.
+        sign = 1 if self._rng.random() < 0.5 else -1
+        for s in (sign, -sign):
+            if self._take_step(agent, agent.heading + s * math.pi / 2.0):
+                return True
+        return False
+
+    def _take_step(self, agent: _Agent, direction: float) -> bool:
+        """Move `step_length` in `direction` if the segment is wall-free."""
+        nx = agent.x + self._step_length * math.cos(direction)
+        ny = agent.y + self._step_length * math.sin(direction)
+        if not self._segment_clear(agent.x, agent.y, nx, ny):
+            return False
+        agent.x = nx
+        agent.y = ny
+        agent.steps_until_decision -= 1
+        return True
+
+    def _segment_clear(self, x1: float, y1: float, x2: float, y2: float) -> bool:
+        """True iff the line segment doesn't cross any wall."""
+        if self._wall_tree is None:
+            return True
+        seg = LineString([(x1, y1), (x2, y2)])
+        for w_idx in self._wall_tree.query(seg):
+            if seg.crosses(self._walls[int(w_idx)]):
+                return False
+        return True
+
+    def _redecide(self, agent: _Agent, *, omni: bool) -> None:
+        """Pick a new target. `omni=True` skips the FOV cone (T&P top node)."""
         cell_idx = int(self._kdtree.query([agent.x, agent.y])[1])
         visible = self._grid.visible[cell_idx]
         if visible.size == 0:
@@ -151,8 +196,11 @@ class AgentSimulation:
             agent.steps_until_decision = self._params.steps_before_turn
             return
 
-        cone = self._fov_filter(agent, visible)
-        candidates = cone if cone.size > 0 else visible  # relax if cone empty
+        if omni:
+            candidates = visible
+        else:
+            cone = self._fov_filter(agent, visible)
+            candidates = cone if cone.size > 0 else visible  # relax if empty
         # Uniform sampling per Turner & Penn (2002). Do NOT distance-weight:
         # the through-vision (sum of sight lines through a cell) is an
         # *analytical* statistic equivalent to the agent steady state, not

@@ -30,20 +30,27 @@ crowd dynamics. Collision avoidance is intentionally omitted.
 
 ## Fidelity to Turner & Penn (2002), Figure 8
 
-This implementation is a **continuous-space simplification** of the
-original grid-stepping decision loop. The table below maps each node of
-T&P's flow-chart to its counterpart in `pnt_sim/agents.py`.
+Each node of T&P's flow-chart maps to a corresponding step in
+`pnt_sim/agents.py::_advance_agent`. Movement is continuous rather than
+cell-snapped, but the decision structure is preserved one-to-one.
 
-| T&P Figure 8                                          | This implementation                                                                                | Status |
-| ----------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------ |
-| Initial: *Select a visible destination* (omni)        | `spawn()` samples uniformly from the full visible set; heading derives from the pick.              | ✓      |
-| *Have less than n-steps been taken?*                  | `steps_until_decision` counter, decremented each frame.                                            | ✓      |
-| *Select a new visible destination from FOV*           | `_redecide()` filters the visible set to a ±FOV/2 cone around the heading and samples uniformly.   | ✓      |
-| *Is a step toward the destination possible?*          | Not checked — the destination is visible (LOS clear), so straight-line travel is wall-free.        | ⚠️ omitted (safe in continuous space) |
-| *Take a step toward the destination*                  | Agent advances `step_length` along its heading each frame (continuous, not grid-cell stepping).    | ≈      |
-| *Is a side step possible? / Take a side step*         | Not implemented. Side-step is a grid-discretization workaround unnecessary in continuous motion.   | ⚠️ omitted |
-| Stuck → reselect *visible destination* (omni)         | When the FOV cone is empty, relax to the full visible set (omni). Triggers on cone-empty, not on blocked step. | ≈ similar in spirit, different trigger |
-| (not in T&P)                                          | Extra: re-decide on arrival at the target, short-circuiting the "step-not-possible → side-step → reselect" path. | ➕ extension |
+| T&P Figure 8                                          | This implementation                                                                                              | Status |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------ |
+| Initial: *Select a visible destination* (omni)        | `spawn()` samples uniformly from the full visible set; heading derives from the pick.                            | ✓      |
+| *Have less than n-steps been taken?*                  | `steps_until_decision` counter, decremented on each successful step.                                             | ✓      |
+| *Select a new visible destination from FOV*           | `_redecide(omni=False)` filters the visible set to a ±FOV/2 cone around the heading and samples uniformly.       | ✓      |
+| *Is a step toward the destination possible?*          | `_segment_clear(pos, pos + step·heading)` — tests the candidate step against all wall segments via an STRtree.   | ✓      |
+| *Take a step toward the destination*                  | `_take_step(heading)` advances `step_length` along the heading.                                                  | ✓      |
+| *Is a side step possible?*                            | `_take_step(heading ± π/2)` with a random sign chosen first, falling back to the other side.                     | ✓      |
+| *Take a side step*                                    | Same call as above on success.                                                                                   | ✓      |
+| Stuck → reselect *visible destination* (omni)         | `_redecide(omni=True)` — omni reselection (no FOV cone), exactly the "back to top" arrow in Figure 8.            | ✓      |
+| (not in T&P)                                          | Extra: re-decide on arrival at the target. Continuous-space shortcut for what T&P reaches via step-not-possible → side-step → reselect at the target. | ➕ extension |
+
+The only material deviation from the published algorithm is that motion
+is continuous (advance `step_length` along the heading per frame) rather
+than grid-cell stepping. The decision graph, the FOV-cone reselect, the
+step/side-step blockage check, and the omni-reselect-when-stuck all match
+Figure 8.
 
 ## Parameters
 

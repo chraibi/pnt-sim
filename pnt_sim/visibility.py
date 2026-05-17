@@ -29,6 +29,8 @@ class VisibilityGrid:
     visible: list[np.ndarray]  # visible[i] = indices visible from cell i
     grid_spacing: float
     bounds: tuple[float, float, float, float]
+    walls: list[LineString]  # exterior + hole segments; agents use these
+                             # to check whether their next step is blocked.
 
 
 def build_visibility(
@@ -45,6 +47,7 @@ def build_visibility(
         visible=visible,
         grid_spacing=grid_spacing,
         bounds=walkable.bounds,
+        walls=walls,
     )
 
 
@@ -85,7 +88,9 @@ def load_or_build(
 def _cache_key(wkt: str, grid_spacing: float, min_wall_distance: float) -> str:
     h = hashlib.sha256()
     h.update(wkt.encode("utf-8"))
-    h.update(f"|grid={grid_spacing}|clearance={min_wall_distance}".encode("utf-8"))
+    h.update(
+        f"|grid={grid_spacing}|clearance={min_wall_distance}|v=2".encode("utf-8")
+    )
     return h.hexdigest()
 
 

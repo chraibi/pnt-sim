@@ -69,6 +69,36 @@ def test_agent_disappears_after_lifetime() -> None:
     assert counts == [1, 1, 1, 0, 0, 0]
 
 
+def test_agent_does_not_cross_walls() -> None:
+    """Per T&P Figure 8, a blocked step triggers a side step rather than
+    walking through the wall. Drive an agent straight at a thin obstacle
+    and check that it never ends up on the far side."""
+    outer = [(0, 0), (20, 0), (20, 10), (0, 10)]
+    # Thin vertical wall from y=1 to y=9 at x=10. Agent starts left, faces
+    # east. Without the step-clear check it would teleport through.
+    wall = [(9.95, 1), (10.05, 1), (10.05, 9), (9.95, 9)]
+    walkable = Polygon(outer, holes=[wall])
+    grid = build_visibility(walkable, 1.0, min_wall_distance=0.05)
+
+    params = AgentParams(fov_deg=170.0, steps_before_turn=3, step_length=1.0)
+    sim = AgentSimulation(grid, params, np.random.default_rng(7))
+    sim.spawn(5.0, 5.0)
+    agent = sim._agents[0]  # noqa: SLF001
+    # Force heading due east, target on the *far* side of the wall.
+    far_idx = int(np.argmin(np.hypot(grid.cells[:, 0] - 15.0, grid.cells[:, 1] - 5.0)))
+    agent.heading = 0.0
+    agent.target_idx = far_idx
+    agent.steps_until_decision = params.steps_before_turn
+
+    for _ in range(20):
+        sim.step()
+        # The agent must never appear on the far side at y ∈ [1, 9].
+        if 1.0 < agent.y < 9.0:
+            assert agent.x < 10.0, (
+                f"agent walked through the wall: pos=({agent.x}, {agent.y})"
+            )
+
+
 def test_visibility_in_open_room_is_dense() -> None:
     grid = _open_square_grid(size=5.0, spacing=1.0)
     # In a convex room with no obstacles, every cell sees every other cell.
