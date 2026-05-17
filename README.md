@@ -49,8 +49,8 @@ T&P's flow-chart to its counterpart in `pnt_sim/agents.py`.
 
 | CLI flag              | Default          | Meaning                                                                                                                                              |
 | --------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--json`              | *(required)*     | Path to the JuPedSim scenario `config.json` (release zones, distributions, fps).                                                                     |
 | `--wkt`               | *(required)*     | Path to the walkable-area geometry as WKT (outer ring + holes).                                                                                      |
+| `--json`              | *(optional)*     | JuPedSim scenario `config.json`. Only consulted when `--release-mode distributions` (supplies the named release-zone polygons); otherwise ignored.   |
 | `--out`               | *(required)*     | Output sqlite trajectory file (JuPedSim v3 schema).                                                                                                  |
 | `--grid`              | `0.5` m          | Cartesian grid spacing for the visibility lattice. Smaller = finer routes, quadratic-in-N cost on the visibility precompute.                         |
 | `--clearance`         | `0.1` m          | Minimum distance a grid cell must keep from any wall. Prevents agents from clipping corners.                                                         |
@@ -77,13 +77,17 @@ pip install -e .
 
 ```bash
 pnt-sim \
-  --json scenario/config.json \
   --wkt scenario/geometry.wkt \
   --out trails.sqlite \
   --grid 0.5 --fov-deg 170 --steps-before-turn 3 \
   --release-rate 0.1 --max-agents 50 --timesteps 5000 \
   --agent-lifetime 1000 --seed 42
 ```
+
+Only `--wkt` is required. `--json scenario/config.json` is consulted **only**
+when running with `--release-mode distributions` (it supplies the named
+release-zone polygons). Under the default `--release-mode uniform`, agents
+spawn on any visible grid cell and the JSON file is not needed.
 
 Visibility pre-compute is cached next to the output as
 `<out>.visibility.pkl` keyed on geometry hash + grid spacing; subsequent

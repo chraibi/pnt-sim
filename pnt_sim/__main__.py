@@ -3,10 +3,12 @@
 Wires scenario_io -> visibility (with cache) -> AgentSimulation -> TrajectoryWriter.
 
 Usage:
-    python -m pnt_sim --json scenario.json --wkt geometry.wkt --out trails.sqlite \
+    python -m pnt_sim --wkt geometry.wkt --out trails.sqlite \
         --grid 0.5 --fov-deg 170 --steps-before-turn 3 \
         --release-rate 0.1 --max-agents 50 --timesteps 5000 \
         --agent-lifetime 1000 --release-mode uniform --seed 42
+
+    Pass --json scenario/config.json only when --release-mode distributions.
 """
 
 from __future__ import annotations
@@ -36,8 +38,13 @@ def _build_parser() -> argparse.ArgumentParser:
         prog="pnt-sim",
         description="Penn & Turner space-syntax agent simulator.",
     )
-    p.add_argument("--json", required=True, type=Path, help="scenario config.json")
     p.add_argument("--wkt", required=True, type=Path, help="scenario geometry.wkt")
+    p.add_argument(
+        "--json",
+        type=Path,
+        default=None,
+        help="scenario config.json (only needed for --release-mode distributions)",
+    )
     p.add_argument("--out", required=True, type=Path, help="output sqlite path")
     p.add_argument("--grid", type=float, default=0.5, help="grid spacing in m")
     p.add_argument("--clearance", type=float, default=0.1, help="min wall distance for grid cells")
@@ -65,7 +72,14 @@ def main(argv: list[str] | None = None) -> int:
     rng = np.random.default_rng(args.seed)
 
     t0 = time.perf_counter()
-    scenario = load_scenario(args.json, args.wkt)
+    if args.release_mode == "distributions" and args.json is None:
+        print(
+            "error: --release-mode distributions requires --json (release zones "
+            "are read from config.json)",
+            file=sys.stderr,
+        )
+        return 2
+    scenario = load_scenario(args.wkt, args.json)
     print(
         f"scenario loaded: walkable bounds={scenario.walkable.bounds}, "
         f"release_zones={len(scenario.release_zones)}",

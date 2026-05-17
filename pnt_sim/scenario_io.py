@@ -39,13 +39,20 @@ class Scenario:
     release_zones: list[ReleaseZone] = field(default_factory=list)
 
 
-def load_scenario(json_path: Path, wkt_path: Path) -> Scenario:
-    """Load and validate a scenario from app-format files."""
-    config = json.loads(Path(json_path).read_text(encoding="utf-8"))
-    wkt_text = Path(wkt_path).read_text(encoding="utf-8").strip()
+def load_scenario(wkt_path: Path, json_path: Path | None = None) -> Scenario:
+    """Load and validate a scenario from app-format files.
 
+    Only `wkt_path` is required. `json_path` is optional and only consulted
+    for named release zones (used when running with
+    `--release-mode distributions`); under uniform release it can be omitted.
+    """
+    wkt_text = Path(wkt_path).read_text(encoding="utf-8").strip()
     walkable = _load_walkable(wkt_text)
-    zones = _load_release_zones(config)
+
+    zones: list[ReleaseZone] = []
+    if json_path is not None:
+        config = json.loads(Path(json_path).read_text(encoding="utf-8"))
+        zones = _load_release_zones(config)
     return Scenario(walkable=walkable, walkable_wkt=wkt_text, release_zones=zones)
 
 

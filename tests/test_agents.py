@@ -111,7 +111,7 @@ def test_scenario_io_parses_minimal_app_config(tmp_path) -> None:
     wkt_path = tmp_path / "geometry.wkt"
     json_path.write_text(json.dumps(cfg))
     wkt_path.write_text(wkt)
-    scenario = load_scenario(json_path, wkt_path)
+    scenario = load_scenario(wkt_path, json_path)
     assert scenario.walkable_wkt == wkt
     assert scenario.walkable.bounds == (0.0, 0.0, 10.0, 10.0)
     assert len(scenario.release_zones) == 1
