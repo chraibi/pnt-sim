@@ -109,7 +109,7 @@ runs with the same geometry+grid skip it.
 
 A sqlite file in JuPedSim's v3 schema (`trajectory_data`, `metadata`,
 `geometry`, `frame_data`, `levels`, `landings`). Open it in the
-Web-Based JuPedSim viewer alongside the original scenario.
+[Web-Based JuPedSim viewer](https://app.jupedsim.org) alongside the original scenario.
 
 ## References
 
